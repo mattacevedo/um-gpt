@@ -4,23 +4,8 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import CircularProgress from '@mui/material/CircularProgress';
-import { useRouter } from 'next/router';
-
-
 
 export default function Home() {
-
-  // verify request comes from miami.edu
-  const router = useRouter();
-
-  useEffect(() => {
-    if (router.isFallback) return;
-
-    if (router.query.validReferrer !== 'true') {
-      router.push('https://miami.edu');
-      return;
-    }
-  }, [router]);
 
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,7 +34,7 @@ export default function Home() {
 
   // Handle errors
   const handleError = () => {
-    setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: "There's been an error. Make sure the API key is set up correctly and try again." }]);
+    setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: "To get started, fork this Repl and add the environment variable `OPENAI_API_KEY` as a Secret. Make an account on [OpenAI](https://platform.openai.com/docs/api-reference) to get an API key." }]);
     setLoading(false);
     setUserInput("");
   }
@@ -111,10 +96,10 @@ export default function Home() {
       </Head>
       <div className={styles.topnav}>
         <div className={styles.navlogo}>
-          <Image src="/UM-logo.png" alt="UM Logo" width="105" height="60" className={styles.boticon} priority={true} />
+          <a href="/"><Image src="/UM-logo.png" alt="UM Logo" width="105" height="60" className={styles.boticon} priority={true} /></a>
         </div>
         <div className={styles.navlinks}>
-         
+         <h1>UM-GPT 💬</h1>
         </div>
       </div>
       <main className={styles.main}>
@@ -168,21 +153,10 @@ export default function Home() {
             </form>
           </div>
           <div className={styles.footer}>
-            <p>©2023 University of Miami. All rights reserved.<br />
-            <a href="https://learn.microsoft.com/en-us/legal/cognitive-services/openai/data-privacy" target="_blank">Data, Privacy, and Security for Azure OpenAI Service</a></p>
+            <p>©2023 University of Miami. All rights reserved.</p>
           </div>
         </div>
       </main>
     </>
   )
-}
-
-export async function getServerSideProps(context) {
-  const referrer = context.req.headers.referer || '';
-
-  if (referrer.includes('miami.edu')) {
-    return { props: { validReferrer: 'true' } };
-  } else {
-    return { props: { validReferrer: 'false' } };
-  }
 }
